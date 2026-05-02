@@ -2,8 +2,6 @@
 
 A backend system that simulates an AI-powered financial assistant capable of analyzing transaction data, detecting anomalies, and generating spending insights.
 
-The system is designed using a modular, tool-based architecture to mimic how modern AI systems (including LLM agents) route user queries to specialized functions.
-
 ---
 
 ## 🚀 Features
@@ -12,26 +10,24 @@ The system is designed using a modular, tool-based architecture to mimic how mod
 - Total and category-wise spend analysis  
 - Anomaly detection for unusual transactions  
 - Automated financial insights generation  
-- Modular architecture for easy extension to LLM-based agents  
+- Modular architecture for extensibility  
 
 ---
 
 ## 🧠 System Design
 
-The system follows a tool-based architecture:
-
 User Query  
-→ Router (maps query → tool)  
+→ Router (query → tool mapping)  
 → Tools Layer (data processing functions)  
 → FastAPI Response (structured JSON)  
 
-### Tools Implemented:
+### Tools Implemented
 
-- `total_spend()` — calculates overall or category-specific spending  
-- `total_income()` — computes total income  
-- `category_breakdown()` — aggregates spend by category  
-- `detect_anomaly()` — flags unusually high transactions  
-- `generate_insights()` — produces high-level financial insights  
+- total_spend()  
+- total_income()  
+- category_breakdown()  
+- detect_anomaly()  
+- generate_insights()  
 
 ---
 
@@ -46,52 +42,56 @@ User Query
 
 ## 📂 Project Structure
 
-
+```
 project/
-├── app.py # FastAPI application
-├── router.py # Query routing logic
-├── tools.py # Core data processing functions
+├── app.py
+├── router.py
+├── tools.py
 ├── data/
-│ └── transactions.csv
+│   └── transactions.csv
 ├── requirements.txt
 └── README.md
-
+```
 
 ---
 
-## ⚙️ Installation & Setup
-
-Clone the repository:
+## ⚙️ Setup & Installation
 
 ```bash
 git clone https://github.com/your-username/financial-ai-assistant.git
 cd financial-ai-assistant
-
-Install dependencies:
-
 pip install -r requirements.txt
+```
 
-Run the server:
+---
 
+## ▶️ Run the Server
+
+```bash
 uvicorn app:app --host=0.0.0.0 --port=8000
-📌 API Usage
-Base URL
+```
 
-http://127.0.0.1:8000
+---
 
-Endpoint
+## 📌 API Usage
 
 GET /ask?query=your_query
 
-💬 Example Queries
+---
 
-/ask?query=total spend  
-/ask?query=food spend  
-/ask?query=category breakdown  
-/ask?query=any unusual transactions  
-/ask?query=give insights  
+## 💬 Example Queries
 
-📊 Sample Response
+- /ask?query=total spend  
+- /ask?query=food spend  
+- /ask?query=category breakdown  
+- /ask?query=any unusual transactions  
+- /ask?query=give insights  
+
+---
+
+## 📊 Sample Response
+
+```json
 {
   "tool_used": "total_spend",
   "query": "total spend",
@@ -99,47 +99,40 @@ GET /ask?query=your_query
   "total_income": 50000,
   "message": "You spent ₹12400 out of ₹50000 income"
 }
----
-🔍 Key Engineering Decisions
-Modular architecture: separated routing, logic, and API layers
-Tool-based execution: simulates agent-style workflows
-Data handling: used Pandas for efficient aggregation and filtering
-Serialization fixes: converted NumPy outputs to native Python types for API compatibility
-Extensibility: designed to support future LLM-based routing and tool-calling
-⚠️ Challenges & Solutions
-1. Data Serialization Issue
-
-Pandas returns NumPy types (numpy.int64) which are not JSON serializable.
-
-Solution: Explicit conversion to Python native types (int, dict) before returning API responses.
-
-2. Incorrect Anomaly Detection
-
-Initial implementation included income values, skewing thresholds.
-
-Solution: Isolated expense data and used absolute value-based thresholding.
-
-3. Query Routing
-
-Initial system used basic keyword matching.
-
-Solution: Refactored into a modular router that can be replaced with LLM-based decision making.
+```
 
 ---
-🔮 Future Improvements
-Replace rule-based router with LLM-based tool selection
-Add conversational memory and multi-step reasoning
-Integrate real-world financial datasets
-Add frontend dashboard for visualization
-Introduce evaluation metrics for response quality
-📈 What This Project Demonstrates
-Backend system design for AI-driven applications
-Handling real-world data issues (serialization, anomalies)
-Building interpretable, modular ML/AI systems
-Designing APIs for production-style use cases
+
+## 🔍 Key Engineering Decisions
+
+- Modular separation of routing, logic, and API  
+- Tool-based execution design  
+- Explicit conversion of NumPy outputs to native Python types  
+- Structured API responses  
 
 ---
-👤 Author
+
+## ⚠️ Challenges & Fixes
+
+Serialization Issue:
+Pandas returns NumPy types not JSON serializable  
+Fix: Convert to Python native types  
+
+Anomaly Detection Issue:
+Income skewed results  
+Fix: Filter only expenses  
+
+---
+
+## 🔮 Future Improvements
+
+- LLM-based routing  
+- Memory support  
+- UI dashboard  
+- Real datasets  
+
+---
+
+## 👤 Author
 
 Kavana Padaki
-Machine Learning Engineer
