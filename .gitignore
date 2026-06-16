@@ -59,4 +59,4 @@ dist/
 # Large data (optional)
 # =========================
 # If you later use big datasets
-data/*.csv
+# data/*.csv
