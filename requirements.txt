@@ -1,6 +1,13 @@
 fastapi
 uvicorn
 pandas
-openai
-streamlit 
-requests
+
+mcp
+langgraph
+langchain
+langchain-core
+langchain-groq
+langchain-mcp-adapters
+
+pydantic
+httpx
