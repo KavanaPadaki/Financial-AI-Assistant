@@ -1,53 +1,53 @@
-import asyncio
-
+import os
 from langchain_groq import ChatGroq
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain.agents import create_agent
 
+_agent = None
 
-async def main():
 
-    client = MultiServerMCPClient(
-        {
-            "finance": {
-                "command": "python",
-                "args": ["mcp_server.py"],
-                "transport": "stdio"
+async def get_agent():
+    global _agent
+
+    if _agent is None:
+        client = MultiServerMCPClient(
+            {
+                "finance": {
+                    "command": "python",
+                    "args": ["mcp_server.py"],
+                    "transport": "stdio",
+                }
             }
+        )
+
+        tools = await client.get_tools()
+
+        llm = ChatGroq(
+            model="llama-3.3-70b-versatile",
+            api_key=os.getenv("GROQ_API_KEY"),
+        )
+
+        _agent = create_agent(
+            model=llm,
+            tools=tools,
+        )
+
+    return _agent
+
+
+async def ask(query: str):
+
+    agent = await get_agent()
+
+    response = await agent.ainvoke(
+        {
+            "messages": [
+                {
+                    "role": "user",
+                    "content": query,
+                }
+            ]
         }
     )
 
-    tools = await client.get_tools()
-
-    llm = ChatGroq(
-        model="llama-3.3-70b-versatile"
-    )
-
-    agent = create_agent(
-        llm,
-        tools
-    )
-
-    while True:
-
-        query = input("\nAsk: ")
-
-        if query.lower() == "exit":
-            break
-
-        response = await agent.ainvoke(
-            {
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": query
-                    }
-                ]
-            }
-        )
-
-        print(
-            response["messages"][-1].content
-        )
-
-asyncio.run(main())
+    return response["messages"][-1].content
