@@ -1,5 +1,4 @@
-fastapi
-uvicorn
+streamlit
 pandas
 
 mcp
@@ -9,5 +8,9 @@ langchain-core
 langchain-groq
 langchain-mcp-adapters
 
-pydantic
+fastapi
+uvicorn
+
 httpx
+pydantic
+python-dotenv
