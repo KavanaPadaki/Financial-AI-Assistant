@@ -1,7 +1,11 @@
 import pandas as pd
 
 # Load data once
-df = pd.read_csv("data/transactions.csv")
+from pathlib import Path
+
+DATA = Path(__file__).parent / "data" / "transactions.csv"
+
+df = pd.read_csv(DATA)
 
 
 # =========================
