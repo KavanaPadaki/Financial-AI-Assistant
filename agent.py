@@ -1,4 +1,6 @@
 import os
+import sys
+
 from langchain_groq import ChatGroq
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain.agents import create_agent
@@ -13,7 +15,7 @@ async def get_agent():
         client = MultiServerMCPClient(
             {
                 "finance": {
-                    "command": "python",
+                    "command": sys.executable,
                     "args": ["mcp_server.py"],
                     "transport": "stdio",
                 }
@@ -36,7 +38,6 @@ async def get_agent():
 
 
 async def ask(query: str):
-
     agent = await get_agent()
 
     response = await agent.ainvoke(
@@ -50,4 +51,6 @@ async def ask(query: str):
         }
     )
 
-    return response["messages"][-1].content
+    messages = response["messages"]
+
+    return messages[-1].content
