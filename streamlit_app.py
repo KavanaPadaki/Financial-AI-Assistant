@@ -1,33 +1,39 @@
+import asyncio
 import streamlit as st
-import requests
+
+from agent import ask
+
+st.set_page_config(
+    page_title="Financial AI Assistant",
+    page_icon="💰",
+)
 
 st.title("💰 Financial AI Assistant")
 
-query = st.text_input("Ask a question about your spending:")
+st.write("Ask questions about your spending, income, savings, anomalies and financial insights.")
 
-if st.button("Submit") and query:
-    try:
-        response = requests.get(f"http://localhost:8000/ask?query={query}")
-        data = response.json()
+query = st.text_input(
+    "Ask a question",
+    placeholder="Example: What was my total spending this month?",
+)
 
-        st.subheader("Response")
+if st.button("Submit"):
 
-        if "answer" in data:
-            st.write(data["answer"])
+    if not query.strip():
+        st.warning("Please enter a question.")
 
-        if "message" in data:
-            st.write(data["message"])
+    else:
 
-        if "data" in data:
-            st.json(data["data"])
+        with st.spinner("Thinking..."):
 
-        if "anomalies" in data:
-            st.json(data["anomalies"])
+            try:
 
-        if "insights" in data:
-            st.write(data["insights"])
+                answer = asyncio.run(ask(query))
 
-        st.caption(f"Tool used: {data.get('tool_used')}")
+                st.success("Answer")
 
-    except Exception as e:
-        st.error(f"Error: {e}")
+                st.write(answer)
+
+            except Exception as e:
+
+                st.error(str(e))
